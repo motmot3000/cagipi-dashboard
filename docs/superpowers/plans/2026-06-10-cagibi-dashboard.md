@@ -140,8 +140,8 @@ echo "Déployé → http://cagipi.local/"
 
 ### Task 8: Première génération réelle + vérif bout-en-bout
 
-- [ ] **Step 1 :** `ssh cagipi.local '~/cagibi-dashboard/generate.sh full'` puis `ssh cagipi.local 'jq .status /var/www/landing-page/data.json'` → `"ok"` ou `"partial"`. Si échec : lire `~/cagibi-dashboard/logs/$(date +%F).log`, corriger (boucle).
-- [ ] **Step 2 :** ouvrir http://cagipi.local/ depuis le PC — vraies données visibles, proxys /trilium /drive /greenlight toujours fonctionnels. Screenshots 480 px + 1920 px. Commit fixes éventuels.
+- [x] **Step 1 :** `ssh cagipi.local '~/cagibi-dashboard/generate.sh full'` puis `ssh cagipi.local 'jq .status /var/www/landing-page/data.json'` → `"ok"` ou `"partial"`. Si échec : lire `~/cagibi-dashboard/logs/$(date +%F).log`, corriger (boucle).
+- [x] **Step 2 :** ouvrir http://cagipi.local/ depuis le PC — vraies données visibles, proxys /trilium /drive /greenlight toujours fonctionnels. Screenshots 480 px + 1920 px. Commit fixes éventuels.
 
 ### Task 9: Cron
 

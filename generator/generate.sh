@@ -7,18 +7,21 @@ exec >>"$LOG" 2>&1; echo "=== $(date -Is) mode=$MODE"
 exec 9>"$DIR/.lock"; flock -n 9 || { echo "déjà en cours, skip"; exit 0; }
 
 # Trilium direct (déterministe, sans IA)
+# search=* ne renvoie qu'une note ; note.dateModified >= MONTH-3 = "notes récentes"
 curl -sf -H "Authorization: $(cat "$HOME/.trilium-token")" \
-  "http://127.0.0.1:8080/etapi/notes?search=*&orderBy=dateModified&orderDirection=desc&limit=5" \
+  "http://127.0.0.1:8080/etapi/notes?search=note.dateModified%20%3E%3D%20MONTH-3&orderBy=dateModified&orderDirection=desc&limit=5" \
   > "$DIR/trilium_raw.json" || echo '{"results":[]}' > "$DIR/trilium_raw.json"
 
 PROMPT="$DIR/prompt-$MODE.md"
 TMP="$DIR/data.tmp.json"
 "$HOME/.local/bin/claude" -p "$(cat "$PROMPT")" \
   --allowedTools "Read" "mcp__claude_ai_Gmail__*" "mcp__claude_ai_Google_Calendar__*" "mcp__claude_ai_Microsoft_365__*" \
-  --output-format text > "$TMP.raw"
+  --output-format text < /dev/null > "$TMP.raw"
 # extraire le JSON (claude peut entourer de ```)
 sed -n '/^{/,$p' "$TMP.raw" | sed 's/^```.*//' > "$TMP"
 jq -e '.generated_at and .kpis and (.mail_perso|type=="array")' "$TMP" >/dev/null
+# generated_at posé par le script (le modèle peut se tromper d'heure)
+jq --arg now "$(date -Is)" '.generated_at = $now' "$TMP" > "$TMP.ts" && mv "$TMP.ts" "$TMP"
 
 if [ "$MODE" = refresh ] && [ -f "$OUT" ]; then
   jq --slurpfile old "$OUT" '.digest_md = ($old[0].digest_md // "")' "$TMP" > "$TMP.2" && mv "$TMP.2" "$TMP"
