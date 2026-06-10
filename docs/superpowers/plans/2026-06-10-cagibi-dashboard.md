@@ -68,9 +68,9 @@ Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préf
 
 **Files:** Create: `site/style.css`
 
-- [ ] **Step 1 : base portrait (défaut, ~480px)** — variables reprises de l'existant (`--bg:#1b1d1f; --panel:#2a2d30; --neon:#00ff9c; --neon-soft; --text:#d0d0d0; --muted:#9aa0a6`), radial-gradient fond, colonne unique, espacement système 8px (16 intra-groupe / 32 inter-groupes), ASCII `font-size: clamp(7px,2.2vw,18px)`, KPIs grid 2×2, cartes panel + hover néon (copie de l'effet existant), listes mails/agenda compactes (13-14px, line-height 1.5), badge fraîcheur (`.fresh` néon / `.stale` rouge `#ff5555`), pas de scroll horizontal (`overflow-x:hidden`, `min-width:0` sur items).
-- [ ] **Step 2 : breakpoints** — `@media (min-width:880px)` : grille 2 colonnes (`grid-template-columns: 1.2fr 1fr`), max-width 1000px ; `@media (min-width:1280px)` : 3 colonnes, max-width 1280px, KPIs 4×1, sections compactes pour tout-visible-sans-scroll.
-- [ ] **Step 3 : vérifier aux 3 largeurs** (480×800, 1024×768, 1920×1080) via navigateur/playwright screenshots. Squint test : hiérarchie néon = titres/valeurs seulement. Commit.
+- [x] **Step 1 : base portrait (défaut, ~480px)** — variables reprises de l'existant (`--bg:#1b1d1f; --panel:#2a2d30; --neon:#00ff9c; --neon-soft; --text:#d0d0d0; --muted:#9aa0a6`), radial-gradient fond, colonne unique, espacement système 8px (16 intra-groupe / 32 inter-groupes), ASCII `font-size: clamp(7px,2.2vw,18px)`, KPIs grid 2×2, cartes panel + hover néon (copie de l'effet existant), listes mails/agenda compactes (13-14px, line-height 1.5), badge fraîcheur (`.fresh` néon / `.stale` rouge `#ff5555`), pas de scroll horizontal (`overflow-x:hidden`, `min-width:0` sur items).
+- [x] **Step 2 : breakpoints** — `@media (min-width:880px)` : grille 2 colonnes (`grid-template-columns: 1.2fr 1fr`), max-width 1000px ; `@media (min-width:1280px)` : 3 colonnes, max-width 1280px, KPIs 4×1, sections compactes pour tout-visible-sans-scroll.
+- [x] **Step 3 : vérifier aux 3 largeurs** (480×800, 1024×768, 1920×1080) via navigateur/playwright screenshots. Squint test : hiérarchie néon = titres/valeurs seulement. Commit.
 
 ### Task 5: app.js — rendu + horloge + refresh
 

@@ -1,0 +1,581 @@
+/* =========================================================
+   {CagiPi} Dashboard — style.css
+   Mobile-first, système 8px, identité neon sur fond sombre
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   0. Reset & box-sizing
+   --------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------------------------------------------------------
+   1. Design tokens
+   --------------------------------------------------------- */
+:root {
+  --bg:          #1b1d1f;
+  --panel:       #2a2d30;
+  --neon:        #00ff9c;
+  --neon-soft:   rgba(0, 255, 156, 0.5);
+  --neon-glow:   rgba(0, 255, 156, 0.15);
+  --text:        #d0d0d0;
+  --muted:       #9aa0a6;
+  --border:      #3a3f44;
+  --danger:      #ff5555;
+
+  /* 8px grid tokens */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  16px;
+  --sp-4:  24px;
+  --sp-5:  32px;
+  --sp-6:  48px;
+  --sp-7:  64px;
+
+  --radius-sm:  6px;
+  --radius-md:  10px;
+
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* ---------------------------------------------------------
+   2. Base
+   --------------------------------------------------------- */
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-mono);
+  background: radial-gradient(circle at top, #222 0%, var(--bg) 60%);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------
+   3. Layout — container (mobile = single column)
+   --------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--sp-4) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+/* Every direct section child */
+.container > * {
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------
+   4. Header
+   --------------------------------------------------------- */
+header {
+  text-align: center;
+}
+
+/* ASCII art ------------------------------------------------ */
+.ascii {
+  display: block;
+  color: var(--neon);
+  text-align: center;
+  text-shadow: 0 0 10px var(--neon-soft);
+  white-space: pre;
+  font-size: clamp(7px, 2.2vw, 18px);
+  line-height: 1.2;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  margin-bottom: var(--sp-3);
+}
+
+/* Clock block ---------------------------------------------- */
+.clock-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2);
+}
+
+#clock {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  color: var(--neon);
+  text-shadow: 0 0 8px var(--neon-soft);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+#date {
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* Badge freshness ------------------------------------------ */
+.badge {
+  display: inline-block;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  margin-top: var(--sp-1);
+}
+
+.badge.fresh {
+  color: var(--neon);
+  border-color: var(--neon);
+  text-shadow: 0 0 6px var(--neon-soft);
+}
+
+.badge.stale {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ---------------------------------------------------------
+   5. Section title
+   --------------------------------------------------------- */
+.section-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--neon);
+  text-shadow: 0 0 6px var(--neon-soft);
+  margin-bottom: var(--sp-3);
+  /* Terminal prefix via content */
+}
+
+.section-title::before {
+  content: "▸ ";
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------
+   6. KPI grid
+   --------------------------------------------------------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.kpi-tile {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+.kpi-value {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 600;
+  color: var(--neon);
+  text-shadow: 0 0 8px var(--neon-soft);
+  line-height: 1;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+/* ---------------------------------------------------------
+   7. Cards (tools grid)
+   --------------------------------------------------------- */
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  background: linear-gradient(180deg, #2f3236, var(--panel));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(0, 255, 156, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--neon);
+  box-shadow: 0 0 25px var(--neon-glow);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--neon);
+  text-shadow: 0 0 6px var(--neon-soft);
+  margin-bottom: var(--sp-1);
+  letter-spacing: 0.02em;
+}
+
+.card p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------
+   8. Lists — mails, agenda, notes (structure injectable JS)
+   --------------------------------------------------------- */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+/* Mail sub-elements */
+.mail-from {
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.mail-subject {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.mail-snippet {
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.mail-when {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Agenda sub-elements */
+.event-title {
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.event-time {
+  color: var(--neon);
+  font-size: 0.8rem;
+}
+
+.event-location {
+  color: var(--muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+/* Notes sub-elements */
+.note-title {
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.note-date {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Important marker (néon bord gauche) */
+li.important,
+li[data-important="true"] {
+  border-left: 2px solid var(--neon);
+  padding-left: var(--sp-2);
+  box-shadow: inset 2px 0 6px rgba(0, 255, 156, 0.08);
+}
+
+/* Links in lists */
+li a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+li a:hover {
+  color: var(--neon);
+}
+
+/* ---------------------------------------------------------
+   9. Digest — markdown-rendered content
+   --------------------------------------------------------- */
+#digest-content {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+#digest-content h1,
+#digest-content h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--neon);
+  text-shadow: 0 0 4px var(--neon-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: var(--sp-3) 0 var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-1);
+}
+
+#digest-content h3 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: var(--sp-2) 0 var(--sp-1);
+}
+
+#digest-content p {
+  margin-bottom: var(--sp-2);
+}
+
+#digest-content strong {
+  color: #c8ffd8;
+  font-weight: 600;
+}
+
+#digest-content em {
+  color: var(--muted);
+  font-style: italic;
+}
+
+#digest-content ul {
+  padding-left: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+#digest-content ul li {
+  list-style: disc;
+  display: list-item;
+  border-bottom: none;
+  padding: 2px 0;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+#digest-content a {
+  color: var(--neon);
+  text-decoration: none;
+}
+
+#digest-content a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   10. Utility states
+   --------------------------------------------------------- */
+.empty {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   11. Footer
+   --------------------------------------------------------- */
+footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6f757b;
+  padding: var(--sp-4) 0 var(--sp-3);
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.04em;
+}
+
+footer span {
+  color: var(--neon);
+  text-shadow: 0 0 4px var(--neon-soft);
+}
+
+/* ---------------------------------------------------------
+   12. BREAKPOINT — 880px: 2-column layout
+   Main sections distribute into two columns via grid-areas.
+   No wrapper added to HTML — we assign grid areas directly.
+   --------------------------------------------------------- */
+@media (min-width: 880px) {
+
+  .container {
+    max-width: 1000px;
+    padding: var(--sp-5) var(--sp-5);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    grid-template-areas:
+      "hd    hd"
+      "kpis  digest"
+      "mails mails"
+      "agenda trilium"
+      "tools  tools"
+      "ft     ft";
+    gap: var(--sp-5) var(--sp-5);
+    align-items: start;
+  }
+
+  header        { grid-area: hd; }
+  #kpis         { grid-area: kpis; }
+  #digest       { grid-area: digest; }
+  /* mails: perso + pro sit side by side inside a dedicated row */
+  #mail-perso,
+  #mail-pro     { grid-area: mails; }
+  #agenda       { grid-area: agenda; }
+  #trilium      { grid-area: trilium; }
+  #tools        { grid-area: tools; }
+  footer        { grid-area: ft; }
+
+  /* Override: mail-perso and mail-pro should be side by side, not
+     both occupying the same area. We re-grid the mails row. */
+  .container {
+    grid-template-areas:
+      "hd          hd"
+      "kpis        digest"
+      "mail-perso  mail-pro"
+      "agenda      trilium"
+      "tools       tools"
+      "ft          ft";
+  }
+
+  #mail-perso { grid-area: mail-perso; }
+  #mail-pro   { grid-area: mail-pro; }
+
+  /* ASCII: can afford a bit more size at 880px */
+  .ascii {
+    font-size: clamp(10px, 1.6vw, 18px);
+  }
+
+  /* Tools grid: multi-column on wider screen */
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+/* ---------------------------------------------------------
+   13. BREAKPOINT — 1280px: 3-column layout
+   Left rail (mails), center (kpis+digest+agenda), right (trilium+tools)
+   --------------------------------------------------------- */
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+    padding: var(--sp-5) var(--sp-6);
+    grid-template-columns: 1fr 1.4fr 1fr;
+    grid-template-areas:
+      "hd          hd          hd"
+      "mail-perso  kpis        trilium"
+      "mail-pro    digest      tools"
+      "mail-pro    agenda      tools"
+      "ft          ft          ft";
+    gap: var(--sp-4) var(--sp-5);
+  }
+
+  /* KPIs: 4 en ligne sur grand écran */
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .kpi-value {
+    font-size: 1.6rem;
+  }
+
+  /* ASCII: plein potentiel */
+  .ascii {
+    font-size: clamp(13px, 1.2vw, 18px);
+  }
+
+  /* Clock bigger */
+  #clock {
+    font-size: 2.5rem;
+  }
+
+  /* Tools: 2 colonnes dans la colonne droite */
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Lists a bit more dense */
+  li {
+    padding: 6px 0;
+    font-size: 0.825rem;
+  }
+}
+
+/* ---------------------------------------------------------
+   14. Accessibility & focus
+   --------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
