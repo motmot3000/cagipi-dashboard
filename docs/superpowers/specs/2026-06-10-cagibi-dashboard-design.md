@@ -4,19 +4,30 @@ Date : 2026-06-10 · Statut : validé en brainstorming, en attente relecture Tho
 
 ## Objectif
 
-Poste de pilotage perso servi par cagipi (Raspberry Pi 5, Debian 13, allumé 24/7) : mails, agenda, notes, digest IA. Consultation passive uniquement — pas de chat intégré (hors scope v1).
+Refonte de **http://cagipi.local/** (landing {CagiPi} actuelle) en poste de pilotage complet : la page d'accueil du serveur devient LE dashboard. Cagipi servait déjà de tableau de bord des outils — on garde cette adresse comme élément central, on connecte les données (mails, agenda, notes) et on ajoute la couche IA (digest). Consultation passive uniquement — pas de chat intégré (hors scope v1).
+
+## Identité visuelle
+
+Conserver l'identité {CagiPi} existante : fond sombre `#1b1d1f`, néon vert `#00ff9c` (glow), JetBrains Mono, cartes panel `#2a2d30` avec hover néon. Header ASCII art conservé (version compacte sur écran portrait). Le style indigo du prototype `cagibi-dashboard.html` est abandonné ; sa structure de sections (mails, agenda, KPIs) est reprise et réhabillée.
 
 ## Affichage — 3 contextes, 1 seule page
 
 | Contexte | Largeur | Layout |
 |---|---|---|
-| Écran Pi portrait (8,5×15 cm, branché sur cagipi, kiosk) | ~480–720 px | Colonne unique : horloge/date → KPIs 2×2 → digest IA → mails perso → mails pro → agenda → notes Trilium. Pas de scroll horizontal. Texte/targets lisibles à bout de bras. |
-| PC classique | ≥ 880 px | Grille 2 colonnes (reprend design du prototype `cagibi-dashboard.html`). |
+| Écran Pi portrait (8,5×15 cm, branché sur cagipi, kiosk) | ~480–720 px | Colonne unique : header ASCII compact + horloge → KPIs 2×2 → digest IA → mails perso → mails pro → agenda → notes Trilium → outils. Pas de scroll horizontal. Texte/targets lisibles à bout de bras. |
+| PC classique | ≥ 880 px | Grille 2 colonnes. |
 | Grand écran PC | ≥ 1280 px | Grille 3 colonnes, densité plus forte, tout visible sans scroll si possible. |
+
+Sections de la page :
+1. **Header** — ASCII {CagiPi} + horloge/date + badge fraîcheur données.
+2. **KPIs** — mails non lus, mails pro, événements du jour, notes récentes.
+3. **Digest IA** — résumé matinal généré par Claude.
+4. **Mails perso / Mails pro / Agenda / Notes Trilium** — listes live depuis `data.json`.
+5. **Outils** — cartes existantes conservées : Greenlight, Trilium, Drive (Syncthing), Uptime Kuma. Extensible (apps Hermes v1.1, tuiles supplémentaires).
 
 - CSS media queries, mobile-first (portrait = base).
 - Auto-refresh JS : refetch `data.json` toutes les 60 s sans recharger la page ; horloge mise à jour chaque seconde.
-- Kiosk : Chromium plein écran lancé au boot de cagipi (service systemd ou autostart labwc/wayfire), pointé sur `http://localhost/dashboard/`. Rotation portrait configurée côté OS.
+- Kiosk : Chromium plein écran lancé au boot de cagipi (service systemd ou autostart labwc/wayfire), pointé sur `http://localhost/`. Rotation portrait configurée côté OS.
 - Résolution exacte de l'écran Pi inconnue (pas encore branché) — design fluide, calage final au branchement.
 
 ## Architecture (tout sur cagipi)
@@ -31,15 +42,16 @@ cron
                 ├─ Google Agenda (connecteur claude.ai)
                 ├─ Outlook pro info@lecagibi.ch (connecteur M365 — à brancher)
                 ├─ Trilium ETAPI → http://127.0.0.1:8080 (local au Pi)
-                └─ écrit /var/www/cagibi-dashboard/data.json (atomique : tmp + mv)
+                └─ écrit /var/www/landing-page/data.json (atomique : tmp + mv)
 nginx
- └─ location /dashboard/ → /var/www/cagibi-dashboard/ (statique)
-      → http://cagipi/dashboard/ sur tout le LAN
+ └─ config INCHANGÉE : root /var/www/landing-page, proxys /trilium/, /drive/, /greenlight/api/
+      → http://cagipi.local/ sur tout le LAN (+ Tailscale)
 ```
 
-- Frontend : `index.html` unique (HTML/CSS/JS vanilla), adapté du prototype existant.
+- Frontend : remplace `index.html` + `style.css` dans `/var/www/landing-page/`, ajoute `app.js` + `data.json`.
+- **À préserver** dans ce dossier : `greenlight/` (assets servis sous /greenlight), `favicon.ico`, `.git` (dépôt existant, user `loulou26`) — commit de l'ancienne version dans ce `.git` avant remplacement.
 - Aucun backend applicatif. Aucun secret côté nginx.
-- Déploiement depuis le PC de Thomas via ssh/rsync (clé déjà en place).
+- Déploiement depuis le PC de Thomas via ssh/rsync (clé en place) ; source de vérité = dépôt local `Cagibi Dashboard`.
 
 ## Format `data.json`
 
