@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{CagiPi}</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+
+      <!-- HEADER -->
+      <header>
+        <pre class="ascii">
+ ██████╗  █████╗  ██████╗ ██╗██████╗ ██╗
+██╔════╝ ██╔══██╗██╔════╝ ██║██╔══██╗██║
+██║      ███████║██║  ███╗██║██████╔╝██║
+██║      ██╔══██║██║   ██║██║██╔═══╝ ██║
+╚██████╗ ██║  ██║╚██████╔╝██║██║     ██║
+ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝╚═╝     ╚═╝
+
+              {CagiPi}</pre>
+        <div class="clock-block">
+          <div id="clock"></div>
+          <div id="date"></div>
+          <span id="freshness" class="badge"></span>
+        </div>
+      </header>
+
+      <!-- KPIs -->
+      <section id="kpis">
+        <h2 class="section-title">Indicateurs</h2>
+        <div class="kpi-grid">
+          <div class="kpi-tile">
+            <span id="kpi-mails" class="kpi-value">—</span>
+            <span class="kpi-label">Mails non lus</span>
+          </div>
+          <div class="kpi-tile">
+            <span id="kpi-pro" class="kpi-value">—</span>
+            <span class="kpi-label">Mails pro</span>
+          </div>
+          <div class="kpi-tile">
+            <span id="kpi-events" class="kpi-value">—</span>
+            <span class="kpi-label">Événements aujourd'hui</span>
+          </div>
+          <div class="kpi-tile">
+            <span id="kpi-notes" class="kpi-value">—</span>
+            <span class="kpi-label">Notes récentes</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIGEST -->
+      <section id="digest">
+        <h2 class="section-title">Digest</h2>
+        <div id="digest-content">
+          <p class="empty">Pas encore de digest.</p>
+        </div>
+      </section>
+
+      <!-- MAILS PERSO -->
+      <section id="mail-perso">
+        <h2 class="section-title">Mails perso</h2>
+        <ul id="mail-perso-list"></ul>
+        <p class="empty">Aucun mail.</p>
+      </section>
+
+      <!-- MAILS PRO -->
+      <section id="mail-pro">
+        <h2 class="section-title">Mails pro</h2>
+        <ul id="mail-pro-list"></ul>
+        <p class="empty">En attente de connexion Outlook.</p>
+      </section>
+
+      <!-- AGENDA -->
+      <section id="agenda">
+        <h2 class="section-title">Agenda</h2>
+        <ul id="agenda-list"></ul>
+        <p class="empty">Rien de prévu.</p>
+      </section>
+
+      <!-- TRILIUM -->
+      <section id="trilium">
+        <h2 class="section-title">Notes Trilium</h2>
+        <ul id="trilium-list"></ul>
+        <p class="empty">Aucune note récente.</p>
+      </section>
+
+      <!-- OUTILS -->
+      <section id="tools">
+        <h2 class="section-title">Outils</h2>
+        <div class="tools-grid">
+          <a href="/greenlight" class="card">
+            <h2>Greenlight</h2>
+            <p>Dashboard de monitoring du Pi5 Core, stats système et conteneurs Docker.</p>
+          </a>
+          <a href="/trilium" class="card">
+            <h2>Trilium</h2>
+            <p>Bureau du CagiBi : notes et wiki.</p>
+          </a>
+          <a href="/drive" class="card">
+            <h2>Drive Syncthing</h2>
+            <p>Espace de fichiers synchronisés Syncthing.</p>
+          </a>
+          <a href="http://cagipi:3001" class="card">
+            <h2>Uptime Kuma</h2>
+            <p>Supervision des sites, disponibilité et alertes.</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <span>{CagiPi}</span> · Raspberry Pi · auto-hébergé · accès restreint
+      </footer>
+
+    </main>
+  </body>
+</html>

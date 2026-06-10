@@ -61,8 +61,8 @@ Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préf
 
 **Files:** Create: `site/index.html`
 
-- [ ] **Step 1 : écrire le HTML** — `<main class="container">` avec, dans l'ordre : `<header>` (ASCII {CagiPi} compact via `<pre class="ascii">`, horloge `#clock`, date `#date`, badge `#freshness`) ; `<section id="kpis">` (4 tuiles) ; `<section id="digest">` ; `<section id="mail-perso">` ; `<section id="mail-pro">` ; `<section id="agenda">` ; `<section id="trilium">` ; `<section id="tools">` (cartes : Greenlight `/greenlight`, Trilium `/trilium`, Drive `/drive`, Uptime Kuma `http://cagipi:3001`) ; `<footer>`. Conteneurs de listes vides remplis par JS ; états vides/erreur en HTML (`.empty`, masqués par défaut). Fonte JetBrains Mono (Google Fonts comme l'actuel). `lang="fr"`.
-- [ ] **Step 2 : vérifier** — servir localement `python3 -m http.server 5500 -d site`, ouvrir http://localhost:5500 : structure visible sans CSS. Commit.
+- [x] **Step 1 : écrire le HTML** — `<main class="container">` avec, dans l'ordre : `<header>` (ASCII {CagiPi} compact via `<pre class="ascii">`, horloge `#clock`, date `#date`, badge `#freshness`) ; `<section id="kpis">` (4 tuiles) ; `<section id="digest">` ; `<section id="mail-perso">` ; `<section id="mail-pro">` ; `<section id="agenda">` ; `<section id="trilium">` ; `<section id="tools">` (cartes : Greenlight `/greenlight`, Trilium `/trilium`, Drive `/drive`, Uptime Kuma `http://cagipi:3001`) ; `<footer>`. Conteneurs de listes vides remplis par JS ; états vides/erreur en HTML (`.empty`, masqués par défaut). Fonte JetBrains Mono (Google Fonts comme l'actuel). `lang="fr"`.
+- [x] **Step 2 : vérifier** — servir localement `python3 -m http.server 5500 -d site`, ouvrir http://localhost:5500 : structure visible sans CSS. Commit.
 
 ### Task 4: style.css — identité {CagiPi}, mobile-first
 
