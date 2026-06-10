@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-06-10T07:00:12+02:00",
+  "status": "ok",
+  "digest_md": "## Matinale du 10 juin\n\nVous avez **3 emails personnels** à traiter, dont 1 important de l'administration. **2 mails professionnels** en attente.\n\nCe matin: **réunion équipe 10h**, puis visite client 14h. Vérifier la **demande de docs URSSAF** avant la fin de la journée.",
+  "kpis": {
+    "mails_non_lus": 3,
+    "mails_pro": 2,
+    "events_aujourdhui": 2,
+    "notes_recentes": 3
+  },
+  "mail_perso": [
+    {
+      "from": "impots@dgfip.gouv.fr",
+      "subject": "Avis d'imposition 2025 — Revenu fiscal",
+      "snippet": "Votre avis d'imposition pour l'année 2025 est maintenant disponible. Veuillez vérifier les informations...",
+      "when": "08:42",
+      "important": true,
+      "link": "https://mail.google.com/mail/u/0/#search/from%3Aimpots%40dgfip.gouv.fr"
+    },
+    {
+      "from": "contact@laposte.fr",
+      "subject": "Colis à retirer — n° 4FR8829",
+      "snippet": "Un colis vous attend à votre bureau de poste. Présentez votre pièce d'identité et le code...",
+      "when": "hier 17:30",
+      "important": false,
+      "link": "https://mail.google.com/mail/u/0/#search/from%3Acontact%40laposte.fr"
+    },
+    {
+      "from": "amis@example.com",
+      "subject": "Samedi 15 — apéro Vieille-Ville ?",
+      "snippet": "Ça te dirait de nous rejoindre samedi vers 18h près de la cathédrale? On sera quelques-uns...",
+      "when": "hier 14:15",
+      "important": false,
+      "link": "https://mail.google.com/mail/u/0/#search/from%3Aamis%40example.com"
+    }
+  ],
+  "mail_pro": [
+    {
+      "from": "direction@lecagibi.ch",
+      "subject": "Réunion d'équipe — mardi 11h",
+      "snippet": "Confirmation: réunion stratégie bar/événements mardi 11h30. SVP confirmer présence et amener...",
+      "when": "07:15",
+      "important": false,
+      "link": "https://outlook.office.com/mail/"
+    },
+    {
+      "from": "reservations@lecagibi.ch",
+      "subject": "4 réservations en attente — saisie Booking",
+      "snippet": "Table pour 6 vendredi 21h (groupe L.), table pour 4 samedi 20h30 (Raclette). Besoin de...",
+      "when": "06:52",
+      "important": false,
+      "link": "https://outlook.office.com/mail/"
+    }
+  ],
+  "agenda": [
+    {
+      "title": "Réunion équipe — stratégie",
+      "start": "2026-06-10T10:00:00+02:00",
+      "end": "2026-06-10T11:00:00+02:00",
+      "location": "Le Cagibi, Vieille-Ville"
+    },
+    {
+      "title": "Visite client — Agence Web Solutions",
+      "start": "2026-06-10T14:00:00+02:00",
+      "end": "2026-06-10T15:30:00+02:00",
+      "location": "Quai de l'île, Genève"
+    },
+    {
+      "title": "Apéro thématique — Craft beers",
+      "start": "2026-06-11T18:00:00+02:00",
+      "end": "2026-06-11T20:00:00+02:00",
+      "location": ""
+    }
+  ],
+  "trilium": [
+    {
+      "title": "Notes — Cagibi rénovation mai-juin 2026",
+      "modified": "2026-06-10T06:30:00+02:00",
+      "link": "/trilium/#root/KzP9x2vR7mNq"
+    },
+    {
+      "title": "Contacts fournisseurs — matériel bar",
+      "modified": "2026-06-09T16:45:00+02:00",
+      "link": "/trilium/#root/8aJfQ1bL2xWp"
+    },
+    {
+      "title": "Recettes — cocktails signature 2026",
+      "modified": "2026-06-08T14:20:00+02:00",
+      "link": "/trilium/#root/DvTc6hRs9kYn"
+    }
+  ]
+}

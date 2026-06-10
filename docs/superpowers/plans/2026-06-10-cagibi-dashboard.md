@@ -54,8 +54,8 @@ Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préf
 
 **Files:** Create: `site/data.sample.json`
 
-- [ ] **Step 1 : écrire data.sample.json** — schéma exact du spec, peuplé de données plausibles (3 mails perso dont 1 important, 2 mails pro, 3 événements, 3 notes, digest markdown 4-5 lignes, `status: "ok"`, `generated_at` récent). C'est le contrat frontend↔générateur.
-- [ ] **Step 2 : valider** `jq . site/data.sample.json` → parse OK. Commit.
+- [x] **Step 1 : écrire data.sample.json** — schéma exact du spec, peuplé de données plausibles (3 mails perso dont 1 important, 2 mails pro, 3 événements, 3 notes, digest markdown 4-5 lignes, `status: "ok"`, `generated_at` récent). C'est le contrat frontend↔générateur.
+- [x] **Step 2 : valider** `jq . site/data.sample.json` → parse OK. Commit.
 
 ### Task 3: index.html — structure
 
