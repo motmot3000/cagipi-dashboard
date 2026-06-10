@@ -28,6 +28,13 @@ jq -e '.generated_at and .kpis and (.mail_perso|type=="array")' "$TMP" >/dev/nul
 # generated_at posé par le script (le modèle peut se tromper d'heure)
 jq --arg now "$(date -Is)" '.generated_at = $now' "$TMP" > "$TMP.ts" && mv "$TMP.ts" "$TMP"
 
+# LEDs outils : checks locaux déterministes, injectés par le script
+up_tcp()  { timeout 2 bash -c ">/dev/tcp/127.0.0.1/$1" 2>/dev/null && echo true || echo false; }
+up_http() { curl -sf -o /dev/null -m 3 "$1" && echo true || echo false; }
+TOOLS=$(printf '{"greenlight":%s,"trilium":%s,"nas":%s,"kuma":%s}' \
+  "$(up_http http://127.0.0.1/greenlight)" "$(up_tcp 8080)" "$(up_tcp 445)" "$(up_tcp 3001)")
+jq --argjson tools "$TOOLS" '.tools = $tools' "$TMP" > "$TMP.tl" && mv "$TMP.tl" "$TMP"
+
 if [ "$MODE" = refresh ] && jq -e . "$OUT" >/dev/null 2>&1; then
   jq --slurpfile old "$OUT" '.digest_md = ($old[0].digest_md // "")' "$TMP" > "$TMP.2" && mv "$TMP.2" "$TMP"
 fi

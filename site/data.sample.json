@@ -72,6 +72,12 @@
       "location": ""
     }
   ],
+  "tools": {
+    "greenlight": true,
+    "trilium": true,
+    "nas": true,
+    "kuma": false
+  },
   "trilium": [
     {
       "title": "Notes — Cagibi rénovation mai-juin 2026",

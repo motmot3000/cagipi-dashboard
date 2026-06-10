@@ -502,6 +502,19 @@ function renderDigest(md) {
 }
 
 /* ---------------------------------------------------------
+   7b. LEDs statut outils
+   tools = {greenlight: bool, trilium: bool, nas: bool, kuma: bool}
+   absent/null → LED neutre (statut inconnu)
+   --------------------------------------------------------- */
+function renderTools(tools) {
+  document.querySelectorAll('.led[data-tool]').forEach(function (led) {
+    const state = tools ? tools[led.dataset.tool] : null;
+    led.classList.toggle('on', state === true);
+    led.classList.toggle('off', state === false);
+  });
+}
+
+/* ---------------------------------------------------------
    8. Gestion des erreurs globales d'affichage
    --------------------------------------------------------- */
 function showGlobalError(msg) {
@@ -547,6 +560,7 @@ async function loadData() {
   renderAgenda(data.agenda   || []);
   renderTrilium(data.trilium || []);
   renderDigest(data.digest_md || '');
+  renderTools(data.tools || null);
 
   // Freshness
   if (data.generated_at) {

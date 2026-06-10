@@ -453,6 +453,29 @@ footer span {
 }
 
 /* ---------------------------------------------------------
+   11b. LEDs statut outils (vert = en ligne, rouge = down)
+   --------------------------------------------------------- */
+.led {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #5a6066;          /* neutre : statut inconnu */
+}
+
+.led.on {
+  background: var(--neon);
+  box-shadow: 0 0 8px var(--neon-soft);
+}
+
+.led.off {
+  background: #ff5555;
+  box-shadow: 0 0 8px rgba(255, 85, 85, 0.5);
+}
+
+/* ---------------------------------------------------------
    12. BREAKPOINT — 880px: 2-column layout
    Main sections distribute into two columns via grid-areas.
    No wrapper added to HTML — we assign grid areas directly.
