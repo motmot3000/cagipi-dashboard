@@ -14,7 +14,7 @@ PC (ce dépôt = source de vérité)
 cagipi (cron, user motmot3000)
  ├─ 07:00        generate.sh full     (digest IA du matin)
  └─ */30 6-23 h  generate.sh refresh  (données, digest réinjecté)
-      └─ claude -p headless (connecteurs Gmail + Agenda + M365)
+      └─ claude -p headless (connecteurs Gmail + Agenda) + himalaya IMAP Infomaniak
          + curl Trilium ETAPI → écrit data.json (atomique tmp+mv)
 
 nginx (config inchangée) → sert la page + data.json, proxys /trilium /drive /greenlight
@@ -30,7 +30,7 @@ badge fraîcheur (rouge si données > 2 h). Contrat de données : `site/data.sam
 | Gmail perso | ✅ live (filtre low-noise) |
 | Google Agenda | ✅ live (aujourd'hui + 7 j) |
 | Trilium | ✅ live (ETAPI local, notes < 3 mois) |
-| Mails pro info@lecagibi.ch | ⏳ `status: partial` — brancher connecteur Microsoft 365 sur claude.ai puis `claude` sur cagipi |
+| Mails pro info@lecagibi.ch | ⏳ `status: partial` — Himalaya configuré (IMAP Infomaniak) ; poser le mot de passe dans `~/.infomaniak-pass` sur cagipi (chmod 600) |
 | Digest IA | ✅ généré à 07:00 |
 
 ## Opérations courantes

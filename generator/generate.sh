@@ -12,10 +12,15 @@ curl -sf -H "Authorization: $(cat "$HOME/.trilium-token")" \
   "http://127.0.0.1:8080/etapi/notes?search=note.dateModified%20%3E%3D%20MONTH-3&orderBy=dateModified&orderDirection=desc&limit=5" \
   > "$DIR/trilium_raw.json" || { echo "WARN trilium ETAPI KO (token/service ?)"; echo '{"results":[]}' > "$DIR/trilium_raw.json"; }
 
+# Mails pro via Himalaya (IMAP Infomaniak, déterministe, sans IA)
+"$HOME/.local/bin/himalaya" envelope list --account infomaniak --folder INBOX \
+  --output json > "$DIR/mailpro_raw.json" 2>/dev/null \
+  || { echo "WARN himalaya KO (mot de passe ~/.infomaniak-pass posé ?)"; echo '[]' > "$DIR/mailpro_raw.json"; }
+
 PROMPT="$DIR/prompt-$MODE.md"
 TMP="$DIR/data.tmp.json"
 "$HOME/.local/bin/claude" -p "$(cat "$PROMPT")" \
-  --allowedTools "Read" "mcp__claude_ai_Gmail__*" "mcp__claude_ai_Google_Calendar__*" "mcp__claude_ai_Microsoft_365__*" \
+  --allowedTools "Read" "mcp__claude_ai_Gmail__*" "mcp__claude_ai_Google_Calendar__*" \
   --output-format text < /dev/null > "$TMP.raw"
 # extraire le JSON (claude peut entourer de ```)
 sed -n '/^{/,$p' "$TMP.raw" | sed 's/^```.*//' > "$TMP"

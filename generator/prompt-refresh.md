@@ -12,12 +12,13 @@ Tu es un assistant de tableau de bord personnel. Tu dois produire un objet JSON 
 - Lien : `https://mail.google.com/mail/u/0/#search/<expéditeur urlencodé>` (encode l'adresse from).
 - Si l'outil est indisponible : tableau vide `[]`, `status` → `"partial"`.
 
-### 2. Mails professionnels Microsoft 365 (outil `mcp__claude_ai_Microsoft_365__*`)
-- Compte : `info@lecagibi.ch`
-- Lire les mails NON LUS (même filtre low-noise que ci-dessus).
-- Maximum **5 mails** à retenir.
-- Lien fixe pour tous les mails pro : `https://outlook.office.com/mail/`
-- Si l'outil ne répond pas ou n'est pas authentifié : tableau vide `[]`, `status` → `"partial"`.
+### 2. Mails professionnels info@lecagibi.ch (Infomaniak via Himalaya)
+- **Ne pas appeler d'outil réseau.** Lire le fichier local : `/home/motmot3000/cagibi-dashboard/mailpro_raw.json` (outil `Read`).
+- Format : sortie JSON de `himalaya envelope list` — tableau d'enveloppes avec `id`, `flags`, `from` (`name`/`addr`), `subject`, `date`.
+- Garder les mails NON LUS (pas de flag `Seen`), même filtre low-noise que ci-dessus.
+- Maximum **5 mails** à retenir. Champ `snippet` : chaîne vide `""` (pas de corps disponible).
+- Lien fixe pour tous les mails pro : `https://mail.infomaniak.com/`
+- Si le fichier est vide ou `[]` : tableau vide `[]`, `status` → `"partial"`.
 
 ### 3. Agenda Google Calendar (outil `mcp__claude_ai_Google_Calendar__*`)
 - Récupérer les événements d'**aujourd'hui** et des **7 prochains jours**.
@@ -77,7 +78,7 @@ Tu es un assistant de tableau de bord personnel. Tu dois produire un objet JSON 
       "snippet": "<extrait du corps, texte brut>",
       "when": "<heure HH:MM ou 'hier HH:MM' ou date courte>",
       "important": false,
-      "link": "https://outlook.office.com/mail/"
+      "link": "https://mail.infomaniak.com/"
     }
   ],
   "agenda": [
