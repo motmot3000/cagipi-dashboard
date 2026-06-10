@@ -1,47 +1,63 @@
-# Cagibi Dashboard — Plan du projet
+# Cagibi Dashboard — http://cagipi.local/
 
-Tableau de bord central ("poste de pilotage") regroupant mails, agenda, agents et outils.
+Poste de pilotage {CagiPi} : mails, agenda, notes Trilium, digest IA, cartes outils.
+Remplace l'ancienne landing (sauvegardée dans le `.git` de `/var/www/landing-page`, commit `223477b`).
 
-## Fichiers
+## Architecture
 
-- `cagibi-dashboard.html` — le tableau de bord (version sauvegardée, figée).
-- Version **live** (mise à jour avec les données réelles) : artifact `cagibi-dashboard` dans le panneau latéral de Cowork.
+```
+PC (ce dépôt = source de vérité)
+ └─ ./deploy.sh ──rsync──► cagipi
+      ├─ site/ (index.html, style.css, app.js) → /var/www/landing-page/
+      └─ generator/ → ~/cagibi-dashboard/
 
-> La copie HTML dans ce dossier est statique. Seul l'artifact se rafraîchit avec les données des connecteurs.
+cagipi (cron, user motmot3000)
+ ├─ 07:00        generate.sh full     (digest IA du matin)
+ └─ */30 6-23 h  generate.sh refresh  (données, digest réinjecté)
+      └─ claude -p headless (connecteurs Gmail + Agenda + M365)
+         + curl Trilium ETAPI → écrit data.json (atomique tmp+mv)
 
-## Contenu actuel du dashboard
+nginx (config inchangée) → sert la page + data.json, proxys /trilium /drive /greenlight
+```
 
-| Section | État | Source |
-|---|---|---|
-| Boîte mail — onglet **Perso** | ✅ live | Gmail (thomas.walter.wunsche@gmail.com) |
-| Boîte mail — onglet **Pro** | ⏳ en attente | info@lecagibi.ch — nécessite connexion Outlook |
-| **Agenda** | ✅ live | Google Agenda |
-| **Mes agents** | ✅ statique | Claude (terminal) · Mr. Hermes-Lecagibot |
-| **Tâches planifiées** | ✅ live (vide) | Scheduled tasks |
-| **Cagipi** (apps centrales) | ✅ lien | http://cagipi.local/ (réseau local) |
-| **Outils connectés** | ✅ statique | Gmail, Agenda, Firecrawl, Figma, Canva |
+Frontend : vanilla HTML/CSS/JS, fetch `data.json` toutes les 60 s, horloge 1 s,
+badge fraîcheur (rouge si données > 2 h). Contrat de données : `site/data.sample.json`.
 
-## Agents
+## État des sources
 
-- **Claude (terminal)** — travail & développement (CLI).
-- **Mr. Hermes-Lecagibot** — tâches administratives (bot).
+| Source | État |
+|---|---|
+| Gmail perso | ✅ live (filtre low-noise) |
+| Google Agenda | ✅ live (aujourd'hui + 7 j) |
+| Trilium | ✅ live (ETAPI local, notes < 3 mois) |
+| Mails pro info@lecagibi.ch | ⏳ `status: partial` — brancher connecteur Microsoft 365 sur claude.ai puis `claude` sur cagipi |
+| Digest IA | ✅ généré à 07:00 |
 
-## Contraintes techniques
+## Opérations courantes
 
-- L'artifact tourne dans un environnement **sandboxé** : accès réseau bloqué sauf quelques CDN.
-  → Impossible d'incruster `cagipi.local` ou de lire une boîte non connectée depuis la page.
-- Les liens (Cagipi, mails) s'ouvrent dans le **vrai navigateur**, hors sandbox.
-- La boîte pro `info@lecagibi.ch` sera lisible une fois le connecteur **Microsoft 365 / Outlook** branché.
+- **Déployer une modif** : `./deploy.sh`
+- **Forcer une génération** : `ssh cagipi.local '~/cagibi-dashboard/generate.sh full'` (ou `refresh`)
+- **Logs** : `ssh cagipi.local 'tail ~/cagibi-dashboard/logs/$(date +%F).log'` (rotation 14 j)
+- **Données courantes** : `ssh cagipi.local 'jq .status /var/www/landing-page/data.json'`
 
-## Prochaines étapes possibles
+## Activer le kiosk (au branchement de l'écran portrait)
 
-1. Connecter **Microsoft 365 (Outlook)** → activer l'onglet Pro en direct.
-2. Ajouter des **tuiles d'accès direct** aux apps de Cagipi (fournir nom + URL de chaque app).
-3. Créer des **tâches planifiées** confiées aux agents
-   (ex. Hermes : résumé des mails admin chaque matin ; veille web quotidienne via Firecrawl).
-4. Ajouter des **boutons de lancement** sur les agents (commande terminal / URL de déclenchement de Hermes).
+Unit déjà copié dans `~/.config/systemd/user/cagibi-kiosk.service` sur cagipi (désactivé).
 
-## Connecteurs disponibles
+```bash
+ssh cagipi.local 'wlr-randr --output HDMI-A-1 --transform 90'   # rotation portrait (adapter la sortie)
+ssh cagipi.local 'systemctl --user enable --now cagibi-kiosk.service'
+```
 
-- Connectés : Gmail, Google Agenda, Firecrawl, Figma, Canva.
-- À connecter : Microsoft 365 / Outlook (pour la boîte pro).
+(Si session Wayland labwc pas encore ouverte au boot : activer l'autologin + `loginctl enable-linger motmot3000`.)
+
+## Notes techniques
+
+- `--allowedTools "mcp__*"` refusé par claude CLI 2.1.170 → scoper par serveur
+  (`mcp__claude_ai_Gmail__*`, etc.) — déjà fait dans `generate.sh`.
+- `generated_at` est posé par `generate.sh` (le modèle se trompe d'heure).
+- Recherche Trilium : `note.dateModified >= MONTH-3` (`search=*` ne renvoie qu'une note).
+- Token Trilium : `~/.trilium-token` sur cagipi (chmod 600).
+- Spec : `docs/superpowers/specs/2026-06-10-cagibi-dashboard-design.md` ·
+  Plan : `docs/superpowers/plans/2026-06-10-cagibi-dashboard.md`
+- Connu : `/drive` (Syncthing) répondait déjà 502 avant la refonte — backend down, indépendant du dashboard.

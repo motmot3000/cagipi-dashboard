@@ -161,8 +161,8 @@ crontab /tmp/ct && crontab -l'
 
 **Files:** Create: `kiosk/cagibi-kiosk.service`
 
-- [ ] **Step 1 :** unit systemd user : `chromium-browser --kiosk --noerrdialogs --disable-session-crashed-bubble http://localhost/` + `Restart=always`, cible graphique Wayland (labwc). Copier sur cagipi, NE PAS enable (écran pas branché ; rotation portrait à régler au branchement, cf. `wlr-randr --transform`).
-- [ ] **Step 2 :** documenter activation dans INSTRUCTIONS.md (2 commandes). Commit final + mise à jour INSTRUCTIONS.md (remplacer contenu obsolète artifact Cowork par l'archi réelle).
+- [x] **Step 1 :** unit systemd user : `chromium-browser --kiosk --noerrdialogs --disable-session-crashed-bubble http://localhost/` + `Restart=always`, cible graphique Wayland (labwc). Copier sur cagipi, NE PAS enable (écran pas branché ; rotation portrait à régler au branchement, cf. `wlr-randr --transform`).
+- [x] **Step 2 :** documenter activation dans INSTRUCTIONS.md (2 commandes). Commit final + mise à jour INSTRUCTIONS.md (remplacer contenu obsolète artifact Cowork par l'archi réelle).
 
 ---
 

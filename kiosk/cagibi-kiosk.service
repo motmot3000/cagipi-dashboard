@@ -1,0 +1,15 @@
+# Service systemd USER — Chromium kiosk sur le dashboard {CagiPi}.
+# Installé dans ~/.config/systemd/user/ sur cagipi, NON activé tant que
+# l'écran portrait n'est pas branché. Activation : voir INSTRUCTIONS.md.
+[Unit]
+Description=Dashboard {CagiPi} — Chromium kiosk
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/chromium --kiosk --noerrdialogs --disable-session-crashed-bubble --disable-infobars http://localhost/
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target
