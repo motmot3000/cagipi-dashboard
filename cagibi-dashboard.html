@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cagibi — Poste de pilotage</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #f6f7f9;
+  color: #1a1a1a;
+  line-height: 1.45;
+  padding: 20px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+header.top {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+header.top h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+header.top .tag {
+  font-size: 12px; color: #fff; background: #4f46e5; padding: 2px 9px;
+  border-radius: 999px; font-weight: 600;
+}
+header.top .sub { font-size: 13px; color: #6b7280; margin-left: auto; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.kpi {
+  background: #fff; border: 1px solid #e6e8eb; border-radius: 12px; padding: 14px 16px;
+}
+.kpi .n { font-size: 26px; font-weight: 700; line-height: 1; }
+.kpi .l { font-size: 12px; color: #6b7280; margin-top: 6px; text-transform: uppercase; letter-spacing: .4px; }
+.kpi.indigo .n { color: #4f46e5; }
+.kpi.green .n { color: #059669; }
+.kpi.amber .n { color: #d97706; }
+.kpi.slate .n { color: #334155; }
+
+.grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+@media (max-width: 880px) { .grid { grid-template-columns: 1fr; } .kpis { grid-template-columns: repeat(2,1fr);} }
+
+.card {
+  background: #fff; border: 1px solid #e6e8eb; border-radius: 12px; padding: 0; overflow: hidden;
+  margin-bottom: 16px;
+}
+.card h2 {
+  font-size: 14px; font-weight: 700; padding: 13px 16px; border-bottom: 1px solid #eef0f2;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h2 .count { font-size: 12px; color: #6b7280; font-weight: 500; margin-left: auto; }
+.card .body { padding: 6px 0; max-height: 380px; overflow-y: auto; }
+
+.item { padding: 10px 16px; border-bottom: 1px solid #f2f3f5; display: flex; gap: 10px; align-items: flex-start; }
+.item:last-child { border-bottom: none; }
+.dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; background: #d1d5db; }
+.dot.unread { background: #4f46e5; }
+.dot.important { background: #dc2626; }
+.item .main { min-width: 0; flex: 1; }
+.item .t { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .m { font-size: 12px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .when { font-size: 11.5px; color: #9ca3af; flex-shrink: 0; text-align: right; }
+.item a { color: inherit; text-decoration: none; }
+.item a:hover .t { color: #4f46e5; }
+
+.ev-date {
+  flex-shrink: 0; width: 44px; text-align: center; background: #eef2ff; border-radius: 8px;
+  padding: 4px 0;
+}
+.ev-date .d { font-size: 17px; font-weight: 700; color: #4f46e5; line-height: 1; }
+.ev-date .mo { font-size: 10px; text-transform: uppercase; color: #6366f1; }
+
+.tools { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; padding: 12px 16px; }
+.tool { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 8px 10px; border: 1px solid #eef0f2; border-radius: 8px; }
+.tool .badge { width: 7px; height: 7px; border-radius: 50%; background: #059669; }
+.tool .badge.off { background: #d1d5db; }
+
+.empty { padding: 22px 16px; text-align: center; color: #9ca3af; font-size: 13px; }
+.loading { padding: 22px 16px; text-align: center; color: #9ca3af; font-size: 13px; }
+.btn {
+  font: inherit; font-size: 12px; font-weight: 600; border: 1px solid #c7d2fe; background: #eef2ff;
+  color: #4f46e5; border-radius: 7px; padding: 5px 10px; cursor: pointer;
+}
+.btn:hover { background: #e0e7ff; }
+.err { color: #b91c1c; font-size: 12px; padding: 4px 16px; }
+.foot { text-align: center; font-size: 11.5px; color: #9ca3af; margin-top: 8px; }
+
+.card.cagipi { border-color: #c7d2fe; }
+.card.cagipi h2 .launch {
+  margin-left: auto; font-size: 12px; font-weight: 600; color: #4f46e5;
+  background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 7px; padding: 4px 10px;
+  text-decoration: none;
+}
+.card.cagipi h2 .launch:hover { background: #e0e7ff; }
+.launch-tile { text-decoration: none; color: inherit; transition: background .12s; }
+.launch-tile:hover { background: #eef2ff; border-color: #c7d2fe; }
+.cagipi-note { font-size: 12px; color: #6b7280; padding: 4px 16px 14px; }
+.cagipi-note code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+
+.agent-ic { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.role-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; flex-shrink: 0; align-self: center; }
+.role-tag.work { background: #eef2ff; color: #4f46e5; }
+.role-tag.admin { background: #fef3c7; color: #b45309; }
+
+.tabs { display: flex; gap: 4px; padding: 8px 12px 0; border-bottom: 1px solid #eef0f2; }
+.tab {
+  font: inherit; font-size: 13px; font-weight: 600; color: #6b7280; background: none;
+  border: none; border-bottom: 2px solid transparent; padding: 7px 12px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; margin-bottom: -1px;
+}
+.tab:hover { color: #374151; }
+.tab.active { color: #4f46e5; border-bottom-color: #4f46e5; }
+.tab .tab-sub { font-size: 10.5px; font-weight: 500; color: #9ca3af; }
+.tab.active .tab-sub { color: #818cf8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Cagibi</h1>
+    <span class="tag">Poste de pilotage</span>
+    <span class="sub" id="updated">Chargement…</span>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi indigo"><div class="n" id="kpi-mail">—</div><div class="l">Mails non lus</div></div>
+    <div class="kpi green"><div class="n" id="kpi-ev">—</div><div class="l">Événements à venir</div></div>
+    <div class="kpi amber"><div class="n" id="kpi-agent">—</div><div class="l">Agents / tâches</div></div>
+    <div class="kpi slate"><div class="n" id="kpi-tools">5</div><div class="l">Outils connectés</div></div>
+  </div>
+
+  <div class="card cagipi">
+    <h2>🗄️ Cagipi — apps centrales
+      <a class="launch" href="http://cagipi.local/" target="_blank" rel="noopener">Ouvrir Cagipi ↗</a>
+    </h2>
+    <div class="tools" id="cagipi-apps">
+      <a class="tool launch-tile" href="http://cagipi.local/" target="_blank" rel="noopener">
+        <span class="badge"></span> Accueil Cagipi
+      </a>
+    </div>
+    <div class="cagipi-note">
+      Interface auto-hébergée sur ton réseau (<code>cagipi.local</code>). Les liens s'ouvrent dans ton navigateur.
+      Donne-moi le nom + l'URL de chaque app pour ajouter des accès directs ici.
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>📬 Boîte mail <span class="count" id="mail-count"></span></h2>
+        <div class="tabs">
+          <button class="tab active" data-tab="perso" onclick="switchTab('perso')">
+            👤 Perso <span class="tab-sub">gmail.com</span>
+          </button>
+          <button class="tab" data-tab="pro" onclick="switchTab('pro')">
+            💼 Pro <span class="tab-sub">lecagibi.ch</span>
+          </button>
+        </div>
+        <div class="body" id="mail-perso"><div class="loading">Chargement des mails…</div></div>
+        <div class="body" id="mail-pro" style="display:none;">
+          <div class="empty">
+            <strong>info@lecagibi.ch</strong> n'est pas encore connectée.<br>
+            Connecte ton compte Outlook / Microsoft 365 pour afficher cette boîte en direct ici.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>📅 Agenda <span class="count" id="ev-count"></span></h2>
+        <div class="body" id="events"><div class="loading">Chargement de l'agenda…</div></div>
+      </div>
+
+      <div class="card">
+        <h2>🤖 Mes agents <span class="count">2</span></h2>
+        <div class="body">
+          <div class="item">
+            <span class="agent-ic" style="background:#eef2ff;color:#4f46e5;">CL</span>
+            <div class="main">
+              <div class="t">Claude (terminal)</div>
+              <div class="m">Travail &amp; développement · CLI</div>
+            </div>
+            <span class="role-tag work">Travail</span>
+          </div>
+          <div class="item">
+            <span class="agent-ic" style="background:#fef3c7;color:#b45309;">HL</span>
+            <div class="main">
+              <div class="t">Mr. Hermes-Lecagibot</div>
+              <div class="m">Tâches administratives · bot</div>
+            </div>
+            <span class="role-tag admin">Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>⏰ Tâches planifiées <span class="count" id="task-count"></span></h2>
+        <div class="body" id="tasks"><div class="loading">Chargement…</div></div>
+      </div>
+
+      <div class="card">
+        <h2>🧰 Outils connectés</h2>
+        <div class="tools">
+          <div class="tool"><span class="badge"></span> Gmail</div>
+          <div class="tool"><span class="badge"></span> Google Agenda</div>
+          <div class="tool"><span class="badge"></span> Firecrawl (web)</div>
+          <div class="tool"><span class="badge"></span> Figma</div>
+          <div class="tool"><span class="badge"></span> Canva</div>
+          <div class="tool"><span class="badge off"></span> Tâches planifiées</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Cagibi · données live via tes connecteurs · utilise le bouton Recharger de l'en-tête pour rafraîchir</div>
+</div>
+
+<script>
+// Robustly extract a JS object from whatever callMcpTool returns
+function parseResult(res) {
+  if (res == null) return null;
+  if (typeof res === "object" && !Array.isArray(res)) {
+    if (res.content && Array.isArray(res.content)) {
+      const txt = res.content.map(c => (c && c.text) ? c.text : "").join("");
+      try { return JSON.parse(txt); } catch (e) { return { _raw: txt }; }
+    }
+    return res;
+  }
+  if (typeof res === "string") {
+    try { return JSON.parse(res); } catch (e) { return { _raw: res }; }
+  }
+  return res;
+}
+
+function cleanSender(s) {
+  if (!s) return "";
+  const m = s.match(/^"?([^"<]+?)"?\s*<.*>$/);
+  return (m ? m[1] : s).trim();
+}
+function timeAgo(iso) {
+  const d = new Date(iso); if (isNaN(d)) return "";
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 3600) return Math.round(diff/60) + " min";
+  if (diff < 86400) return Math.round(diff/3600) + " h";
+  return Math.round(diff/86400) + " j";
+}
+function evDate(iso) {
+  const d = new Date(iso); if (isNaN(d)) return {d:"",mo:"",time:""};
+  const mois = ["jan","fév","mar","avr","mai","juin","juil","aoû","sep","oct","nov","déc"];
+  const time = d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  const day = d.toLocaleDateString("fr-FR",{weekday:"short"});
+  return { d: d.getDate(), mo: mois[d.getMonth()], time: day + " " + time };
+}
+function esc(s){ return (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function switchTab(name) {
+  document.querySelectorAll(".tab").forEach(t =>
+    t.classList.toggle("active", t.dataset.tab === name));
+  document.getElementById("mail-perso").style.display = name === "perso" ? "" : "none";
+  document.getElementById("mail-pro").style.display = name === "pro" ? "" : "none";
+}
+
+async function loadMail() {
+  const el = document.getElementById("mail-perso");
+  try {
+    const r = parseResult(await window.cowork.callMcpTool(
+      "mcp__73154434-91c3-43de-8f9f-3a5c0c6eac86__search_threads",
+      { query: "in:inbox", pageSize: 12 }
+    ));
+    const threads = (r && r.threads) || [];
+    if (!threads.length) { el.innerHTML = '<div class="empty">Boîte de réception vide.</div>'; return; }
+    let unread = 0;
+    const rows = threads.map(t => {
+      const msg = (t.messages && t.messages[0]) || {};
+      const labels = msg.labelIds || [];
+      const isUnread = labels.includes("UNREAD");
+      const isImp = labels.includes("IMPORTANT");
+      if (isUnread) unread++;
+      const cls = isImp ? "important" : (isUnread ? "unread" : "");
+      const link = "https://mail.google.com/mail/u/0/#inbox/" + esc(t.id);
+      return `<div class="item">
+        <span class="dot ${cls}"></span>
+        <div class="main"><a href="${link}" target="_blank" rel="noopener">
+          <div class="t">${esc(msg.subject) || "(sans objet)"}</div>
+          <div class="m">${esc(cleanSender(msg.sender))}</div>
+        </a></div>
+        <div class="when">${timeAgo(msg.date)}</div>
+      </div>`;
+    }).join("");
+    el.innerHTML = rows;
+    document.getElementById("mail-count").textContent = threads.length + " conversations";
+    document.getElementById("kpi-mail").textContent = unread;
+  } catch (e) {
+    el.innerHTML = '<div class="err">Erreur de chargement des mails : ' + esc(String(e)) + '</div>';
+    document.getElementById("kpi-mail").textContent = "!";
+  }
+}
+
+async function loadEvents() {
+  const el = document.getElementById("events");
+  try {
+    const now = new Date().toISOString();
+    const r = parseResult(await window.cowork.callMcpTool(
+      "mcp__b317243c-7d36-4b8e-a130-99d259ed529e__list_events",
+      { startTime: now, pageSize: 12, orderBy: "startTime", timeZone: "Europe/Zurich" }
+    ));
+    const events = (r && r.events) || [];
+    if (!events.length) { el.innerHTML = '<div class="empty">Aucun événement à venir.</div>'; return; }
+    const rows = events.map(ev => {
+      const start = (ev.start && (ev.start.dateTime || ev.start.date)) || "";
+      const d = evDate(start);
+      const link = ev.htmlLink || "#";
+      return `<div class="item">
+        <div class="ev-date"><div class="d">${d.d}</div><div class="mo">${d.mo}</div></div>
+        <div class="main"><a href="${esc(link)}" target="_blank" rel="noopener">
+          <div class="t">${esc(ev.summary) || "(sans titre)"}</div>
+          <div class="m">${esc(d.time)}</div>
+        </a></div>
+      </div>`;
+    }).join("");
+    el.innerHTML = rows;
+    document.getElementById("ev-count").textContent = events.length;
+    document.getElementById("kpi-ev").textContent = events.length;
+  } catch (e) {
+    el.innerHTML = '<div class="err">Erreur agenda : ' + esc(String(e)) + '</div>';
+    document.getElementById("kpi-ev").textContent = "!";
+  }
+}
+
+async function loadTasks() {
+  const el = document.getElementById("tasks");
+  try {
+    const r = parseResult(await window.cowork.callMcpTool(
+      "mcp__scheduled-tasks__list_scheduled_tasks", {}
+    ));
+    let tasks = [];
+    if (Array.isArray(r)) tasks = r;
+    else if (r && Array.isArray(r.tasks)) tasks = r.tasks;
+    else if (r && r._raw && /no scheduled tasks/i.test(r._raw)) tasks = [];
+
+    if (!tasks.length) {
+      el.innerHTML = '<div class="empty">Aucune tâche automatique pour l\'instant.<br>Demande-moi d\'en créer une (ex. résumé des mails à 7h, veille quotidienne).</div>';
+      document.getElementById("kpi-agent").textContent = "2";
+      return;
+    }
+    const rows = tasks.map(t => {
+      const id = t.taskId || t.id || "";
+      const desc = t.description || t.subject || id;
+      const sched = t.schedule || t.cronExpression || "";
+      const next = t.nextRunAt ? new Date(t.nextRunAt).toLocaleString("fr-FR") : "";
+      return `<div class="item">
+        <span class="dot ${t.enabled === false ? "" : "unread"}"></span>
+        <div class="main">
+          <div class="t">${esc(desc)}</div>
+          <div class="m">${esc(sched)}${next ? " · prochaine : " + esc(next) : ""}</div>
+        </div>
+        <button class="btn" onclick="runTask('${esc(id)}', this)">Lancer</button>
+      </div>`;
+    }).join("");
+    el.innerHTML = rows;
+    document.getElementById("task-count").textContent = tasks.length;
+    document.getElementById("kpi-agent").textContent = 2 + tasks.length;
+  } catch (e) {
+    el.innerHTML = '<div class="err">Erreur tâches : ' + esc(String(e)) + '</div>';
+    document.getElementById("kpi-agent").textContent = "!";
+  }
+}
+
+async function runTask(id, btn) {
+  if (!id || !window.cowork.runScheduledTask) return;
+  btn.textContent = "…"; btn.disabled = true;
+  try { await window.cowork.runScheduledTask(id); btn.textContent = "Lancé ✓"; }
+  catch (e) { btn.textContent = "Erreur"; btn.disabled = false; }
+}
+
+function setUpdated() {
+  document.getElementById("updated").textContent =
+    "Mis à jour " + new Date().toLocaleString("fr-FR");
+}
+
+(async function init() {
+  await Promise.all([loadMail(), loadEvents(), loadTasks()]);
+  setUpdated();
+})();
+</script>
+</body>
+</html>
