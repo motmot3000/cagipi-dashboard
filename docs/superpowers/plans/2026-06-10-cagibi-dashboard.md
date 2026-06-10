@@ -37,18 +37,18 @@ Sur cagipi : `generator/` → `~/cagibi-dashboard/`, `site/` → `/var/www/landi
 
 **Files:** aucun (smoke tests ssh)
 
-- [ ] **Step 1 : Gmail + Agenda via connecteurs claude.ai**
+- [x] **Step 1 : Gmail + Agenda via connecteurs claude.ai** — ✅ 2026-06-10. Headless OK avec `--allowedTools "mcp__claude_ai_Gmail__*" "mcp__claude_ai_Google_Calendar__*"`. ⚠️ `mcp__*` global REFUSÉ par claude 2.1.170 (« An allow pattern must name the scope it widens ») → generate.sh doit scoper par serveur.
 
 Run: `ssh cagipi.local '~/.local/bin/claude -p "Liste mes 2 derniers mails non lus (expéditeur+objet) et mon prochain événement agenda. Si tu n'as pas accès, dis ACCES-MANQUANT:<quoi>"'`
 Attendu : données réelles. Si `ACCES-MANQUANT` → vérifier `claude mcp list` sur cagipi, brancher connecteurs, STOP et informer Thomas.
 
-- [ ] **Step 2 : Trilium ETAPI local**
+- [x] **Step 2 : Trilium ETAPI local** — ✅ 2026-06-10. Token copié, ETAPI répond sur `127.0.0.1:8080/etapi` (titres réels).
 
 Copier le token : `scp ~/.trilium-token cagipi.local:~/.trilium-token && ssh cagipi.local 'chmod 600 ~/.trilium-token'`
 Run: `ssh cagipi.local 'curl -s -H "Authorization: $(cat ~/.trilium-token)" "http://127.0.0.1:8080/etapi/notes?search=*&orderBy=dateModified&orderDirection=desc&limit=3"' | jq ".results[].title"`
 Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préfixe.)
 
-- [ ] **Step 3 : M365 (mails pro)** — même test que Step 1 pour info@lecagibi.ch. Si pas branché → `status: partial` prévu par le spec, on continue sans bloquer.
+- [x] **Step 3 : M365 (mails pro)** — ✅ 2026-06-10. `claude mcp list` sur cagipi : « claude.ai Microsoft 365 … Needs authentication » → `status: partial`, on continue sans bloquer.
 
 ### Task 2: Schéma de données + maquette data.sample.json
 
@@ -104,8 +104,9 @@ curl -sf -H "Authorization: $(cat "$HOME/.trilium-token")" \
 PROMPT="$DIR/prompt-$MODE.md"
 TMP="$DIR/data.tmp.json"
 "$HOME/.local/bin/claude" -p "$(cat "$PROMPT")" \
-  --allowedTools "Read,Bash(curl:*),mcp__*" \
+  --allowedTools "Read" "mcp__claude_ai_Gmail__*" "mcp__claude_ai_Google_Calendar__*" "mcp__claude_ai_Microsoft_365__*" \
   --output-format text > "$TMP.raw"
+# NB: wildcard global "mcp__*" refusé par claude 2.1.170 — scoper par serveur obligatoire.
 # extraire le JSON (claude peut entourer de ```)
 sed -n '/^{/,$p' "$TMP.raw" | sed 's/^```.*//' > "$TMP"
 jq -e '.generated_at and .kpis and (.mail_perso|type=="array")' "$TMP" >/dev/null
