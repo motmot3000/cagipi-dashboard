@@ -118,7 +118,7 @@ mv "$TMP" "$OUT"; echo "OK $(date -Is)"
 find "$DIR/logs" -name '*.log' -mtime +14 -delete
 ```
 
-- [ ] **Step 4 : shellcheck local** `shellcheck generator/generate.sh` → 0 erreur. Commit.
+- [x] **Step 4 : shellcheck local** — shellcheck absent (PC + cagipi), `bash -n` OK + revue manuelle. `shellcheck generator/generate.sh` → 0 erreur. Commit.
 
 ### Task 7: deploy.sh
 
@@ -136,7 +136,7 @@ ssh $H 'chmod +x ~/cagibi-dashboard/generate.sh'
 echo "Déployé → http://cagipi.local/"
 ```
 
-- [ ] **Step 1 : écrire + exécuter** `./deploy.sh`. Attendu : backup commité, fichiers copiés, `greenlight/` et `favicon.ico` intacts (`ssh cagipi.local 'ls /var/www/landing-page'`). Commit.
+- [x] **Step 1 : écrire + exécuter** — ✅ backup `223477b`, greenlight/favicon intacts. `./deploy.sh`. Attendu : backup commité, fichiers copiés, `greenlight/` et `favicon.ico` intacts (`ssh cagipi.local 'ls /var/www/landing-page'`). Commit.
 
 ### Task 8: Première génération réelle + vérif bout-en-bout
 
@@ -145,7 +145,7 @@ echo "Déployé → http://cagipi.local/"
 
 ### Task 9: Cron
 
-- [ ] **Step 1 :** installer :
+- [x] **Step 1 :** installer : ✅ crontab posé.
 
 ```bash
 ssh cagipi.local 'crontab -l 2>/dev/null | grep -v cagibi-dashboard > /tmp/ct || true
@@ -155,7 +155,7 @@ crontab /tmp/ct && crontab -l'
 ```
 
 (flock dans generate.sh gère le chevauchement 07:00/07:00.)
-- [ ] **Step 2 :** attendre/forcer un tick (`generate.sh refresh` manuel), vérifier `generated_at` avance et badge fraîcheur passe au vert sur la page. Commit.
+- [x] **Step 2 :** ✅ refresh manuel 18:11, generated_at avance, badge vert. attendre/forcer un tick (`generate.sh refresh` manuel), vérifier `generated_at` avance et badge fraîcheur passe au vert sur la page. Commit.
 
 ### Task 10: Kiosk (préparé, activation au branchement écran)
 
