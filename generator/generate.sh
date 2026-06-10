@@ -10,7 +10,7 @@ exec 9>"$DIR/.lock"; flock -n 9 || { echo "déjà en cours, skip"; exit 0; }
 # search=* ne renvoie qu'une note ; note.dateModified >= MONTH-3 = "notes récentes"
 curl -sf -H "Authorization: $(cat "$HOME/.trilium-token")" \
   "http://127.0.0.1:8080/etapi/notes?search=note.dateModified%20%3E%3D%20MONTH-3&orderBy=dateModified&orderDirection=desc&limit=5" \
-  > "$DIR/trilium_raw.json" || echo '{"results":[]}' > "$DIR/trilium_raw.json"
+  > "$DIR/trilium_raw.json" || { echo "WARN trilium ETAPI KO (token/service ?)"; echo '{"results":[]}' > "$DIR/trilium_raw.json"; }
 
 PROMPT="$DIR/prompt-$MODE.md"
 TMP="$DIR/data.tmp.json"
@@ -23,7 +23,7 @@ jq -e '.generated_at and .kpis and (.mail_perso|type=="array")' "$TMP" >/dev/nul
 # generated_at posé par le script (le modèle peut se tromper d'heure)
 jq --arg now "$(date -Is)" '.generated_at = $now' "$TMP" > "$TMP.ts" && mv "$TMP.ts" "$TMP"
 
-if [ "$MODE" = refresh ] && [ -f "$OUT" ]; then
+if [ "$MODE" = refresh ] && jq -e . "$OUT" >/dev/null 2>&1; then
   jq --slurpfile old "$OUT" '.digest_md = ($old[0].digest_md // "")' "$TMP" > "$TMP.2" && mv "$TMP.2" "$TMP"
 fi
 mv "$TMP" "$OUT"; echo "OK $(date -Is)"
