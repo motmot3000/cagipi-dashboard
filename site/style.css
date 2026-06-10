@@ -495,11 +495,13 @@ footer span {
       "mail-perso  mail-pro"
       "agenda      trilium"
       "tools       tools"
+      "agents      agents"
       "ft          ft";
   }
 
   #mail-perso { grid-area: mail-perso; }
   #mail-pro   { grid-area: mail-pro; }
+  #agents     { grid-area: agents; }
 
   /* ASCII: can afford a bit more size at 880px */
   .ascii {
@@ -526,7 +528,7 @@ footer span {
       "hd          hd          hd"
       "mail-perso  kpis        trilium"
       "mail-pro    digest      tools"
-      "mail-pro    agenda      tools"
+      "mail-pro    agenda      agents"
       "ft          ft          ft";
     gap: var(--sp-4) var(--sp-5);
   }

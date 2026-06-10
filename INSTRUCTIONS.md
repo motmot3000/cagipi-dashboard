@@ -60,4 +60,5 @@ ssh cagipi.local 'systemctl --user enable --now cagibi-kiosk.service'
 - Token Trilium : `~/.trilium-token` sur cagipi (chmod 600).
 - Spec : `docs/superpowers/specs/2026-06-10-cagibi-dashboard-design.md` ·
   Plan : `docs/superpowers/plans/2026-06-10-cagibi-dashboard.md`
-- Connu : `/drive` (Syncthing) répondait déjà 502 avant la refonte — backend down, indépendant du dashboard.
+- Carte Drive Syncthing retirée (le proxy `/drive` répondait 502, backend down) → remplacée par NAS `smb://cagipi.local/nas/`. NB : Chromium n'ouvre pas `smb://` ; le lien sert d'adresse à copier (les gestionnaires de fichiers Linux/macOS l'ouvrent).
+- Section Agents : Monsieur Hermes Lecagibot → https://web.telegram.org/a/#8812981866
