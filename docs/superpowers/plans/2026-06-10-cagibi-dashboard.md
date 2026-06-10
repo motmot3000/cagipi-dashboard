@@ -83,9 +83,9 @@ Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préf
 
 **Files:** Create: `generator/generate.sh`, `generator/prompt-full.md`, `generator/prompt-refresh.md`
 
-- [ ] **Step 1 : prompt-full.md** — instructions : lire mails non lus Gmail perso (filtre low-noise : admin/officiel/action requise ; ignorer promos/newsletters/notifs sociales), mails pro M365 si dispo sinon omettre, agenda du jour + 7 jours, lire `~/cagibi-dashboard/trilium_raw.json` (fourni par le script), rédiger `digest_md` (résumé matinal FR, 5-8 lignes, priorités), répondre UNIQUEMENT avec le JSON conforme au schéma (schéma data.sample.json inclus dans le prompt), `status` = `ok`/`partial`. Liens : Gmail `https://mail.google.com/mail/u/0/#search/...`, Outlook `https://outlook.office.com/mail/`, Trilium `/trilium/#root/<noteId>`.
-- [ ] **Step 2 : prompt-refresh.md** — idem sans digest : champ `digest_md` = chaîne vide (le script réinjecte l'ancien).
-- [ ] **Step 3 : generate.sh** :
+- [x] **Step 1 : prompt-full.md** — instructions : lire mails non lus Gmail perso (filtre low-noise : admin/officiel/action requise ; ignorer promos/newsletters/notifs sociales), mails pro M365 si dispo sinon omettre, agenda du jour + 7 jours, lire `~/cagibi-dashboard/trilium_raw.json` (fourni par le script), rédiger `digest_md` (résumé matinal FR, 5-8 lignes, priorités), répondre UNIQUEMENT avec le JSON conforme au schéma (schéma data.sample.json inclus dans le prompt), `status` = `ok`/`partial`. Liens : Gmail `https://mail.google.com/mail/u/0/#search/...`, Outlook `https://outlook.office.com/mail/`, Trilium `/trilium/#root/<noteId>`.
+- [x] **Step 2 : prompt-refresh.md** — idem sans digest : champ `digest_md` = chaîne vide (le script réinjecte l'ancien).
+- [x] **Step 3 : generate.sh** :
 
 ```bash
 #!/usr/bin/env bash
