@@ -76,8 +76,8 @@ Attendu : 3 titres de notes. (Adapter chemin `/etapi` si Trilium derrière préf
 
 **Files:** Create: `site/app.js`
 
-- [ ] **Step 1 : écrire app.js** — fonctions pures : `renderKpis`, `renderMail(list, elId)`, `renderAgenda`, `renderTrilium`, `renderDigest` (markdown minimal : titres `##`, gras, listes `-` → HTML ; pas de lib) ; `loadData()` = `fetch('data.json', {cache:'no-store'})` avec fallback `data.sample.json` si 404 (dev) ; `updateFreshness(generated_at)` = "il y a X min", classe `.stale` si > 2 h ; horloge `setInterval` 1 s ; data refresh `setInterval` 60 s ; échappement HTML systématique des champs (`textContent` / helper `esc()`) — les snippets mails sont du contenu non fiable.
-- [ ] **Step 2 : vérifier sur data.sample.json** — http://localhost:5500 : toutes sections peuplées, horloge vivante, badge OK ; modifier `generated_at` à -3 h → badge rouge. Tester un sujet de mail contenant `<script>` → affiché en texte. Commit.
+- [x] **Step 1 : écrire app.js** — fonctions pures : `renderKpis`, `renderMail(list, elId)`, `renderAgenda`, `renderTrilium`, `renderDigest` (markdown minimal : titres `##`, gras, listes `-` → HTML ; pas de lib) ; `loadData()` = `fetch('data.json', {cache:'no-store'})` avec fallback `data.sample.json` si 404 (dev) ; `updateFreshness(generated_at)` = "il y a X min", classe `.stale` si > 2 h ; horloge `setInterval` 1 s ; data refresh `setInterval` 60 s ; échappement HTML systématique des champs (`textContent` / helper `esc()`) — les snippets mails sont du contenu non fiable.
+- [x] **Step 2 : vérifier sur data.sample.json** — http://localhost:5500 : toutes sections peuplées, horloge vivante, badge OK ; modifier `generated_at` à -3 h → badge rouge. Tester un sujet de mail contenant `<script>` → affiché en texte. Commit.
 
 ### Task 6: Générateur — prompts + generate.sh
 
