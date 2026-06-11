@@ -27,10 +27,10 @@ badge fraîcheur (rouge si données > 2 h). Contrat de données : `site/data.sam
 
 | Source | État |
 |---|---|
-| Gmail perso | ✅ live (filtre low-noise) |
+| Gmail perso | ✅ live — 5 derniers `category:primary` (lus ou non, filtre low-noise), badge si non-lu |
 | Google Agenda | ✅ live (aujourd'hui + 7 j) |
 | Trilium | ✅ live (ETAPI local, notes < 3 mois) |
-| Mails pro info@lecagibi.ch | ⏳ `status: partial` — Himalaya configuré (IMAP Infomaniak) ; poser le mot de passe dans `~/.infomaniak-pass` sur cagipi (chmod 600) |
+| Mails pro info@lecagibi.ch | ✅ live — Himalaya IMAP Infomaniak, 5 derniers (Hermes marque tout `Seen`) |
 | Digest IA | ✅ généré à 07:00 |
 
 ## Opérations courantes
