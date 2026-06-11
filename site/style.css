@@ -218,12 +218,13 @@ header {
 
 #todo-list li {
   display: flex;
+  flex-direction: row;   /* la règle générique `li` impose column */
   align-items: center;
   gap: var(--sp-2);
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-1) var(--sp-2);
 }
 
 #todo-list input[type="checkbox"] {
