@@ -1,0 +1,13 @@
+# Service systemd USER — mini-serveur todos du dashboard {CagiPi}.
+# Installé dans ~/.config/systemd/user/ sur cagipi par deploy.sh.
+# Nécessite loginctl enable-linger motmot3000 pour démarrer au boot.
+[Unit]
+Description=Dashboard {CagiPi} — mini-serveur todos (127.0.0.1:8765)
+
+[Service]
+ExecStart=/usr/bin/python3 %h/cagibi-dashboard/todo-server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

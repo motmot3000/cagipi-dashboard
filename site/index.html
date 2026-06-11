@@ -32,27 +32,15 @@
         </div>
       </header>
 
-      <!-- KPIs -->
-      <section id="kpis">
-        <h2 class="section-title">Indicateurs</h2>
-        <div class="kpi-grid">
-          <div class="kpi-tile">
-            <span id="kpi-mails" class="kpi-value">—</span>
-            <span class="kpi-label">Mails non lus</span>
-          </div>
-          <div class="kpi-tile">
-            <span id="kpi-pro" class="kpi-value">—</span>
-            <span class="kpi-label">Mails pro</span>
-          </div>
-          <div class="kpi-tile">
-            <span id="kpi-events" class="kpi-value">—</span>
-            <span class="kpi-label">Événements aujourd'hui</span>
-          </div>
-          <div class="kpi-tile">
-            <span id="kpi-notes" class="kpi-value">—</span>
-            <span class="kpi-label">Notes récentes</span>
-          </div>
-        </div>
+      <!-- TODO -->
+      <section id="todo">
+        <h2 class="section-title">À faire</h2>
+        <form id="todo-form" autocomplete="off">
+          <input id="todo-input" type="text" maxlength="500" placeholder="Nouvelle tâche…" aria-label="Nouvelle tâche">
+          <button type="submit" aria-label="Ajouter">+</button>
+        </form>
+        <ul id="todo-list"></ul>
+        <p class="empty">Rien à faire.</p>
       </section>
 
       <!-- DIGEST -->

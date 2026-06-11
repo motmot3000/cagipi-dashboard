@@ -127,22 +127,96 @@ function toggleEmpty(sectionId, isEmpty) {
 }
 
 /* ---------------------------------------------------------
-   3. Rendu KPIs
+   3. Todos (stockage serveur : GET/PUT /todos)
    --------------------------------------------------------- */
-function renderKpis(kpis) {
-  if (!kpis) return;
-  const map = {
-    'kpi-mails':  kpis.mails_non_lus,
-    'kpi-pro':    kpis.mails_pro,
-    'kpi-events': kpis.events_aujourdhui,
-    'kpi-notes':  kpis.notes_recentes,
-  };
-  for (const [id, val] of Object.entries(map)) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = (val != null) ? String(val) : '—';
-    }
+let _todos = [];
+
+function renderTodos() {
+  const ul = document.getElementById('todo-list');
+  if (!ul) return;
+
+  toggleEmpty('todo', _todos.length === 0);
+  ul.innerHTML = '';
+
+  for (const todo of _todos) {
+    const li = document.createElement('li');
+    if (todo.done) li.classList.add('done');
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = todo.done;
+    checkbox.addEventListener('change', () => {
+      todo.done = checkbox.checked;
+      saveTodos();
+    });
+    li.appendChild(checkbox);
+
+    const textEl = document.createElement('span');
+    textEl.className = 'todo-text';
+    textEl.textContent = todo.text;
+    li.appendChild(textEl);
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'todo-del';
+    delBtn.type = 'button';
+    delBtn.textContent = '✕';
+    delBtn.setAttribute('aria-label', 'Supprimer');
+    delBtn.addEventListener('click', () => {
+      _todos = _todos.filter((t) => t !== todo);
+      saveTodos();
+    });
+    li.appendChild(delBtn);
+
+    ul.appendChild(li);
   }
+}
+
+async function loadTodos() {
+  try {
+    const res = await fetch('/todos', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const todos = await res.json();
+    if (Array.isArray(todos)) {
+      _todos = todos;
+      renderTodos();
+    }
+  } catch (err) {
+    console.error('[CagiPi] Erreur chargement todos :', err);
+  }
+}
+
+async function saveTodos() {
+  renderTodos();  // optimistic : l'UI reflète l'état local immédiatement
+  try {
+    const res = await fetch('/todos', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_todos),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    _todos = await res.json();  // version assainie par le serveur
+    renderTodos();
+  } catch (err) {
+    console.error('[CagiPi] Erreur sauvegarde todos :', err);
+  }
+}
+
+function initTodoForm() {
+  const form = document.getElementById('todo-form');
+  const input = document.getElementById('todo-input');
+  if (!form || !input) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    _todos.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      text: text,
+      done: false,
+    });
+    input.value = '';
+    saveTodos();
+  });
 }
 
 /* ---------------------------------------------------------
@@ -554,7 +628,6 @@ async function loadData() {
   // Rendu des sections
   // status === 'partial' est géré implicitement :
   // si une section est absente/vide, les toggleEmpty afficheront .empty
-  renderKpis(data.kpis || null);
   renderMail(data.mail_perso || [], 'mail-perso-list');
   renderMail(data.mail_pro   || [], 'mail-pro-list');
   renderAgenda(data.agenda   || []);
@@ -578,6 +651,11 @@ async function loadData() {
 
   // Premier chargement des données
   loadData();
+
+  // Todos : formulaire + chargement + resynchro 60 s (autres appareils)
+  initTodoForm();
+  loadTodos();
+  setInterval(loadTodos, 60000);
 
   // Rafraîchissement automatique toutes les 60 s
   setInterval(loadData, 60000);

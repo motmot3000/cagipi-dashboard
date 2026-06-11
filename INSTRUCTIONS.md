@@ -17,11 +17,16 @@ cagipi (cron, user motmot3000)
       └─ claude -p headless (connecteurs Gmail + Agenda) + himalaya IMAP Infomaniak
          + curl Trilium ETAPI → écrit data.json (atomique tmp+mv)
 
-nginx (config inchangée) → sert la page + data.json, proxys /trilium /drive /greenlight
+nginx → sert la page + data.json, proxys /trilium /drive /greenlight
+ └─ /todos → 127.0.0.1:8765 (todo-server.py, unit user cagibi-todo.service)
+      └─ GET/PUT liste JSON → ~/cagibi-dashboard/todos.json (jamais touché par generate.sh)
 ```
 
 Frontend : vanilla HTML/CSS/JS, fetch `data.json` toutes les 60 s, horloge 1 s,
 badge fraîcheur (rouge si données > 2 h). Contrat de données : `site/data.sample.json`.
+Carte « À faire » (remplace les tuiles KPI) : ajout/coche/suppression, stockage serveur
+via `/todos` (sync tous appareils, resynchro 60 s). Le champ `kpis` de data.json est
+toujours généré mais plus affiché.
 
 ## État des sources
 
