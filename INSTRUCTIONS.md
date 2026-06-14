@@ -41,12 +41,12 @@ toujours généré mais plus affiché.
 | Google Agenda | ✅ live (aujourd'hui + 7 j) |
 | Trilium | ✅ live (ETAPI local, notes < 3 mois) |
 | Mails pro info@lecagibi.ch | ✅ live — Himalaya IMAP Infomaniak, 5 derniers (Hermes marque tout `Seen`) |
-| Digest IA | ✅ généré à 07:00 |
+| Digest IA | ✅ live — mis à jour à chaque refresh 30 min, plus génération complète le matin |
 
 ## Opérations courantes
 
 - **Déployer une modif** : `./deploy.sh`  (depuis cagibot : `CAGIPI_HOST=cagipi ./deploy.sh`)
-- **Forcer une génération** : `ssh cagipi.local '~/cagibi-dashboard/generate.sh full'` (ou `refresh`)
+- **Forcer une génération** : `ssh cagipi.local '~/cagibi-dashboard/generate.sh refresh'` (ou `full` pour une génération complète)
 - **Logs** : `ssh cagipi.local 'tail ~/cagibi-dashboard/logs/$(date +%F).log'` (rotation 14 j)
 - **Données courantes** : `ssh cagipi.local 'jq .status /var/www/landing-page/data.json'`
 - **Piloter le cron (timers systemd user)** : `ssh cagipi 'systemctl --user list-timers cagibi-*'`,
@@ -74,6 +74,7 @@ ssh cagipi.local 'systemctl --user enable --now cagibi-kiosk.service'
 - `--allowedTools "mcp__*"` refusé par claude CLI 2.1.170 → scoper par serveur
   (`mcp__claude_ai_Gmail__*`, etc.) — déjà fait dans `generate.sh`.
 - `generated_at` est posé par `generate.sh` (le modèle se trompe d'heure).
+- Le mode `refresh` met aussi à jour `digest_md` : ne pas réinjecter l'ancien digest, sinon la carte agenda peut sembler obsolète même quand `agenda` est à jour.
 - Recherche Trilium : `note.dateModified >= MONTH-3` (`search=*` ne renvoie qu'une note).
 - Token Trilium : `~/.trilium-token` sur cagipi (chmod 600).
 - Spec : `docs/superpowers/specs/2026-06-10-cagibi-dashboard-design.md` ·
