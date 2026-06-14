@@ -1,1 +1,16 @@
 .playwright-cli/
+
+# Secrets — jamais commiter (clés SSH, tokens, .env)
+.env
+.env.*
+*.key
+*.pem
+id_ed25519*
+id_rsa*
+*.trilium-token
+.trilium-token
+
+# Données runtime générées sur cagipi (pas dans la source)
+data.json
+todos.json
+logs/

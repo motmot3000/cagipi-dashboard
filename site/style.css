@@ -58,6 +58,12 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  /* scroll tactile écran Pi : pan vertical, pas de sélection texte */
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ---------------------------------------------------------
@@ -654,3 +660,19 @@ footer span {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ---------------------------------------------------------
+   Scroll tactile écran Pi — barre large À GAUCHE (écran étroit)
+   --------------------------------------------------------- */
+html { direction: rtl; }          /* déplace la scrollbar à gauche */
+body { direction: ltr; }          /* contenu reste normal */
+html { scrollbar-width: auto; scrollbar-color: var(--neon-soft) var(--bg); }
+::-webkit-scrollbar { width: 18px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--neon-soft);
+  border-radius: 9px;
+  border: 3px solid var(--bg);
+  min-height: 60px;
+}
+::-webkit-scrollbar-thumb:active { background: var(--neon); }

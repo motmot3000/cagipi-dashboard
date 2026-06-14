@@ -660,3 +660,41 @@ async function loadData() {
   // Rafraîchissement automatique toutes les 60 s
   setInterval(loadData, 60000);
 })();
+
+/* Scroll au doigt (écran tactile Pi) — drag direct sur scrollTop + inertie.
+   Gère TOUS les types de pointeur : le tactile du Pi peut arriver comme 'mouse'. */
+(function () {
+  var el = document.scrollingElement || document.documentElement;
+  var active = false, lastY = 0, lastT = 0, vel = 0, raf = null;
+  function stopGlide() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+  function down(e) {
+    active = true; lastY = e.clientY; lastT = e.timeStamp; vel = 0;
+    stopGlide();
+    el.style.scrollBehavior = 'auto';
+  }
+  function move(e) {
+    if (!active) return;
+    var dy = lastY - e.clientY;
+    el.scrollTop += dy;
+    var dt = e.timeStamp - lastT;
+    if (dt > 0) vel = dy / dt;
+    lastY = e.clientY; lastT = e.timeStamp;
+  }
+  function up() {
+    if (!active) return;
+    active = false;
+    var prev = performance.now();
+    (function glide(now) {
+      now = now || performance.now();
+      var dt = now - prev; prev = now;
+      if (Math.abs(vel) < 0.02) { el.style.scrollBehavior = ''; raf = null; return; }
+      el.scrollTop += vel * dt;
+      vel *= Math.pow(0.95, dt / 16);
+      raf = requestAnimationFrame(glide);
+    })();
+  }
+  window.addEventListener('pointerdown', down, { passive: true });
+  window.addEventListener('pointermove', move, { passive: true });
+  window.addEventListener('pointerup', up, { passive: true });
+  window.addEventListener('pointercancel', up, { passive: true });
+})();
