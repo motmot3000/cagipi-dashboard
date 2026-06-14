@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-H=cagipi.local
+# Hôte cagipi : cagipi.local en LAN (PC) ; override CAGIPI_HOST=cagipi sur cagibot (Tailscale).
+H="${CAGIPI_HOST:-cagipi.local}"
 # backup ancien site dans SON dépôt git (une fois ; commit no-op ensuite)
 ssh $H 'cd /var/www/landing-page && git -c user.name=deploy -c user.email=deploy@cagipi add -A && git -c user.name=deploy -c user.email=deploy@cagipi commit -m "backup avant dashboard" || true'
 rsync -av site/index.html site/style.css site/app.js $H:/var/www/landing-page/
