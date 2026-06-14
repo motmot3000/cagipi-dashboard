@@ -6,10 +6,15 @@ Remplace l'ancienne landing (sauvegardée dans le `.git` de `/var/www/landing-pa
 ## Architecture
 
 ```
-PC (ce dépôt = source de vérité)
+PC (ce dépôt = source de vérité)  ──push──► GitHub git@github.com:motmot3000/cagipi-dashboard.git (privé)
  └─ ./deploy.sh ──rsync──► cagipi
       ├─ site/ (index.html, style.css, app.js) → /var/www/landing-page/
       └─ generator/ → ~/cagibi-dashboard/
+
+cagibot (Pi Hermes, 24/7) ──ssh via Tailscale──► cagipi (gestion complète du dashboard)
+ ├─ clone ~/cagipi-dashboard (clé ~/.ssh/id_ed25519_github)
+ └─ deploy : cd ~/cagipi-dashboard && git pull && CAGIPI_HOST=cagipi ./deploy.sh
+      (clé ~/.ssh/id_ed25519_cagipi → authorized_keys cagipi ; Host cagipi = 100.107.29.65 Tailscale)
 
 cagipi (cron, user motmot3000)
  ├─ 07:00        generate.sh full     (digest IA du matin)
@@ -40,10 +45,18 @@ toujours généré mais plus affiché.
 
 ## Opérations courantes
 
-- **Déployer une modif** : `./deploy.sh`
+- **Déployer une modif** : `./deploy.sh`  (depuis cagibot : `CAGIPI_HOST=cagipi ./deploy.sh`)
 - **Forcer une génération** : `ssh cagipi.local '~/cagibi-dashboard/generate.sh full'` (ou `refresh`)
 - **Logs** : `ssh cagipi.local 'tail ~/cagibi-dashboard/logs/$(date +%F).log'` (rotation 14 j)
 - **Données courantes** : `ssh cagipi.local 'jq .status /var/www/landing-page/data.json'`
+- **Piloter le cron (timers systemd user)** : `ssh cagipi 'systemctl --user list-timers cagibi-*'`,
+  `start`/`stop`/`restart cagibi-full.timer cagibi-refresh.timer`
+
+## Accès cagibot (Pi Hermes)
+
+cagibot gère le dashboard via SSH Tailscale (`Host cagipi` → `100.107.29.65`). Secrets jamais
+dans git/kDrive : clés privées restent sur cagibot (`~/.ssh/id_ed25519_cagipi` pour cagipi,
+`id_ed25519_github` pour le repo), chmod 600. `.gitignore` exclut `.env`, `id_ed25519*`, `*.key`, tokens.
 
 ## Activer le kiosk (au branchement de l'écran portrait)
 
